@@ -1,4 +1,7 @@
 <?php
+namespace Middlewares;
+
+use modX;
 
 abstract class Middleware
 {
@@ -6,7 +9,7 @@ abstract class Middleware
 
     protected $modx;
 
-    public function __construct($modx)
+    public function __construct(modX $modx)
     {
         $this->modx = $modx;
     }

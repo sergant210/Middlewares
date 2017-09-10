@@ -9,7 +9,7 @@ switch ($modx->event->name) {
                require_once $path . 'middlewareservice.php';
                require_once $path . 'middleware.php';
            }
-           return new MiddlewareService($modx);
+           return new Middlewares\MiddlewareService($modx);
         });
         app('MiddlewareService')->prepareGlobalMiddlewares();
         break;

@@ -1,4 +1,8 @@
 <?php
+namespace Middlewares;
+
+use modX;
+use modResource;
 
 class MiddlewareService
 {
