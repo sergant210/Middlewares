@@ -33,9 +33,9 @@ class MiddlewareService
 
     }
 
-    protected function addToCollection(Middleware $middleware, $global = true)
+    protected function addToCollection(Middleware $middleware)
     {
-        if ($global) {
+        if ($middleware->global) {
             $this->globalMiddlewares[] = $middleware;
         } else {
             $this->resourceMiddlewares[] = $middleware;
@@ -58,7 +58,7 @@ class MiddlewareService
                     if (!is_string($class)) {
                         $class = $middleware;
                     }
-                    $this->addToCollection(new $class($this->modx), $global)->onRequest();
+                    $this->run($this->modx->event->name, new $class($this->modx, $global));
                 }
             }
         }
@@ -67,9 +67,14 @@ class MiddlewareService
     /**
      * @param string $event
      */
-    public function run($event)
+    public function run($event, Middleware $middleware = null)
     {
         switch ($event) {
+            case 'OnMODXInit':
+            case 'OnLoadWebDocument':
+                if (!is_null($middleware)) $this->addToCollection($middleware)->onRequest();
+                return;
+                break;
         	case 'OnWebPagePrerender':
                 $method = 'beforeResponse';
         		break;

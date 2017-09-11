@@ -9,6 +9,8 @@ abstract class Middleware
 
     protected $modx;
 
+    public $global;
+
     public function __construct(modX $modx)
     {
         $this->modx = $modx;
