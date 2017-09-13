@@ -11,9 +11,10 @@ abstract class Middleware
 
     public $global;
 
-    public function __construct(modX $modx)
+    public function __construct(modX $modx, $global)
     {
         $this->modx = $modx;
+        $this->global = $global;
     }
 
     abstract public function onRequest();

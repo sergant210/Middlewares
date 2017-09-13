@@ -10,7 +10,17 @@ $tmp = array(
         'value' => '{core_path}middlewares/',
         'area' => 'middlewares_main',
     ),
+    'lpath' => array(
+        'xtype' => 'textfield',
+        'value' => '{core_path}listeners/',
+        'area' => 'middlewares_main',
+    ),
     'global_middlewares' => array(
+        'xtype' => 'textfield',
+        'value' => '',
+        'area' => 'middlewares_main',
+    ),
+    'listeners' => array(
         'xtype' => 'textfield',
         'value' => '',
         'area' => 'middlewares_main',

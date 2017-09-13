@@ -3,15 +3,11 @@ if ($modx->context->key == 'mgr') return;
 /** @var modX $modx */
 switch ($modx->event->name) {
     case 'OnMODXInit':
-        app()->singleton('MiddlewareService', function() use ($modx) {
-           if (!class_exists('MiddlewareService')) {
-               $path = $modx->getOption('middlewares_core_path', null, MODX_CORE_PATH . 'components/middlewares/') . 'classes/';
-               require_once $path . 'middlewareservice.php';
-               require_once $path . 'middleware.php';
-           }
-           return new Middlewares\MiddlewareService($modx);
-        });
-        app('MiddlewareService')->prepareGlobalMiddlewares();
+        $path = $modx->getOption('middlewares_core_path', null, MODX_CORE_PATH . 'components/middlewares/') . 'classes/';
+        require_once $path . 'middlewareservice.php';
+        $mwService =  new Middlewares\MiddlewareService($modx, $path, $this->id);
+        app()->instance('MiddlewareService', $mwService);
+        app('MiddlewareService')->init();
         break;
     case 'OnLoadWebDocument':
         app('MiddlewareService')->prepareResourceMiddlewares();
@@ -20,4 +16,6 @@ switch ($modx->event->name) {
     case 'OnWebPageComplete':
         app('MiddlewareService')->run($modx->event->name);
         break;
+    default:
+        app('MiddlewareService')->handleListeners($modx->event->name, $scriptProperties);
 }
