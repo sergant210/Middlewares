@@ -1,4 +1,5 @@
 Changelog for Middlewares.
+
 1.1.0-beta
 ==============
 - Adds event listeners based on classes.

@@ -27,7 +27,7 @@ $sources = array(
     'lexicon' => $root . 'core/components/' . PKG_NAME_LOWER . '/lexicon/',
     'docs' => $root . 'core/components/' . PKG_NAME_LOWER . '/docs/',
     'pages' => $root . 'core/components/' . PKG_NAME_LOWER . '/elements/pages/',
-    'source_assets' => $root . 'assets/components/' . PKG_NAME_LOWER,
+    //'source_assets' => $root . 'assets/components/' . PKG_NAME_LOWER,
     'source_core' => $root . 'core/components/' . PKG_NAME_LOWER,
 );
 unset($root);
@@ -231,10 +231,10 @@ if (defined('BUILD_PLUGIN_UPDATE')) {
 $vehicle = $builder->createVehicle($category, $attr);
 
 // now pack in resolvers
-$vehicle->resolve('file', array(
+/*$vehicle->resolve('file', array(
     'source' => $sources['source_assets'],
     'target' => "return MODX_ASSETS_PATH . 'components/';",
-));
+));*/
 $vehicle->resolve('file', array(
     'source' => $sources['source_core'],
     'target' => "return MODX_CORE_PATH . 'components/';",

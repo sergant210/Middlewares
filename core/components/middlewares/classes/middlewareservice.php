@@ -3,6 +3,7 @@ namespace Middlewares;
 
 use modX;
 use modResource;
+use ReflectionObject;
 
 class MiddlewareService
 {
@@ -29,7 +30,6 @@ class MiddlewareService
     {
         $this->prepareGlobalMiddlewares();
         $this->prepareListener();
-        $this->handleListeners($this->modx->event->name);
     }
 
     public function prepareListener()
@@ -51,7 +51,6 @@ class MiddlewareService
             $middlewares = $resource->getTVValue('middlewares');
             if (!empty($middlewares)) $this->process(explode_trim(',', $middlewares), true);
         }
-        $this->handleListeners($this->modx->event->name);
     }
 
     protected function addMiddlewares(Middleware $middleware)
@@ -107,7 +106,6 @@ class MiddlewareService
             foreach (array_merge($this->resourceMiddlewares, $this->globalMiddlewares) as $middleware) {
                 $middleware->$method();
             }
-            $this->handleListeners($event);
         }
     }
 
@@ -131,6 +129,7 @@ class MiddlewareService
 
     public function handleListeners($event, $properties = null)
     {
+        if (empty($this->eventMap[$event])) return;
         foreach ($this->eventMap[$event] as $listener) {
             $listener->$event($properties);
         }
@@ -141,7 +140,7 @@ class MiddlewareService
      */
     protected function createEventMap(Listener $listener)
     {
-        $class = new \ReflectionClass(get_class($listener));
+        $class = new ReflectionObject($listener);
         $methods = $class->getMethods();
         foreach ($methods as $method) {
             if ($method->isConstructor()) continue;

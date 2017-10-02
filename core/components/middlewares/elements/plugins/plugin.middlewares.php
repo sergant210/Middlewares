@@ -16,6 +16,5 @@ switch ($modx->event->name) {
     case 'OnWebPageComplete':
         app('MiddlewareService')->run($modx->event->name);
         break;
-    default:
-        app('MiddlewareService')->handleListeners($modx->event->name, $scriptProperties);
 }
+app('MiddlewareService')->handleListeners($modx->event->name, $scriptProperties);
