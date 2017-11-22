@@ -17,7 +17,7 @@ $tmp = array(
     ),
     'global_middlewares' => array(
         'xtype' => 'textfield',
-        'value' => '',
+        'value' => 'global',
         'area' => 'middlewares_main',
     ),
     'listeners' => array(

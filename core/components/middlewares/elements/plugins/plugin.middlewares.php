@@ -1,10 +1,10 @@
 <?php
-if ($modx->context->key == 'mgr') return;
+if (!function_exists('app')) return;
 /** @var modX $modx */
 switch ($modx->event->name) {
     case 'OnMODXInit':
         $path = $modx->getOption('middlewares_core_path', null, MODX_CORE_PATH . 'components/middlewares/') . 'classes/';
-        require_once $path . 'middlewareservice.php';
+        require_once $path . 'MiddlewareService.php';
         $mwService =  new Middlewares\MiddlewareService($modx, $path, $this->id);
         app()->instance('MiddlewareService', $mwService);
         app('MiddlewareService')->init();
@@ -17,4 +17,5 @@ switch ($modx->event->name) {
         app('MiddlewareService')->run($modx->event->name);
         break;
 }
+/** @var  array $scriptProperties*/
 app('MiddlewareService')->handleListeners($modx->event->name, $scriptProperties);

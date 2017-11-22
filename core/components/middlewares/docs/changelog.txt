@@ -1,5 +1,10 @@
 Changelog for Middlewares.
 
+1.1.0-pl
+==============
+- Added an ability to run listeners before usual MODX plugins.
+- Global middlewares and listeners can be used in the "mgr" context.
+
 1.1.0-beta
 ==============
 - Adds event listeners based on classes.

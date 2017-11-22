@@ -26,7 +26,7 @@ $sources = array(
     'plugins' => $root . 'core/components/' . PKG_NAME_LOWER . '/elements/plugins/',
     'lexicon' => $root . 'core/components/' . PKG_NAME_LOWER . '/lexicon/',
     'docs' => $root . 'core/components/' . PKG_NAME_LOWER . '/docs/',
-    'pages' => $root . 'core/components/' . PKG_NAME_LOWER . '/elements/pages/',
+    //'pages' => $root . 'core/components/' . PKG_NAME_LOWER . '/elements/pages/',
     //'source_assets' => $root . 'assets/components/' . PKG_NAME_LOWER,
     'source_core' => $root . 'core/components/' . PKG_NAME_LOWER,
 );
@@ -241,11 +241,6 @@ $vehicle->resolve('file', array(
 ));
 
 /** @var array $BUILD_RESOLVERS */
-if (!in_array('office', $BUILD_RESOLVERS)) {
-    rrmdir($sources['source_assets'] . '/js/office');
-    rrmdir($sources['source_core'] . '/controllers/office');
-    rrmdir($sources['source_core'] . '/processors/office');
-}
 foreach ($BUILD_RESOLVERS as $resolver) {
     if ($vehicle->resolve('php', array('source' => $sources['resolvers'] . 'resolve.' . $resolver . '.php'))) {
         $modx->log(modX::LOG_LEVEL_INFO, 'Added resolver "' . $resolver . '" to category.');

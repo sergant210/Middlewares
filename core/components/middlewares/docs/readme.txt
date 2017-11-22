@@ -1,7 +1,7 @@
 --------------------
 Middlewares
 --------------------
-Author: Sergei Shlokov <sergant210@bk.ru>
+Author: Sergey Shlokov <sergant210@bk.ru>
 --------------------
 
 Middlewares emulator for MODx Revolution.

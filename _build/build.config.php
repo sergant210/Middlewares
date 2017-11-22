@@ -5,7 +5,7 @@ define('PKG_NAME', 'Middlewares');
 define('PKG_NAME_LOWER', strtolower(PKG_NAME));
 
 define('PKG_VERSION', '1.1.0');
-define('PKG_RELEASE', 'beta');
+define('PKG_RELEASE', 'pl');
 define('PKG_AUTO_INSTALL', false);
 define('PKG_NAMESPACE_PATH', '{core_path}components/' . PKG_NAME_LOWER . '/');
 
@@ -46,8 +46,7 @@ define('BUILD_SNIPPET_STATIC', false);
 define('BUILD_PLUGIN_STATIC', false);
 
 $BUILD_RESOLVERS = array(
-   /* 'tables',
-    'chunks',
-    //'setup',
-    'office',*/
+//    'tables',
+//    'chunks',
+    'setup',
 );
