@@ -38,7 +38,7 @@ return 'GlobalMiddleware';
 ```
 In the next step we need to specify the file name without extension ("global") in the "middlewares_global_middlewares" system setting. That's all.
  
-In the "contexts" property you can specify contexts in which the middleware will be work.
+The "contexts" property is intended to specify contexts in which the middleware will be work.
 ```$php
 // By default the web context is set.
 public $contexts = array('web');
