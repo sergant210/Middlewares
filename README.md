@@ -36,7 +36,7 @@ class GlobalMiddleware extends Middlewares\Middleware
 // If the class name and file name do not match, then you need to return the class name.
 return 'GlobalMiddleware';
 ```
-In the next step we need to specify the file name in the "middlewares_global_middlewares" system setting. That's all.
+In the next step we need to specify the file name without extension ("global") in the "middlewares_global_middlewares" system setting. That's all.
  
 In the "contexts" property you can specify contexts in which the middleware will be work.
 ```$php
