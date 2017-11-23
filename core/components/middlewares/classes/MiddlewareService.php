@@ -14,6 +14,10 @@ class MiddlewareService
     protected $globalMiddlewares = array();
     protected $resourceMiddlewares = array();
     protected $eventMap = array();
+    protected $bootedClasses = array(
+        'middlewares' => array(),
+        'listeners' => array(),
+    );
     public $pluginId;
 
     public function __construct(modX $modx, $path, $pluginId)
@@ -33,7 +37,7 @@ class MiddlewareService
     public function init()
     {
         $this->prepareGlobalMiddlewares();
-        $this->prepareListener();
+        $this->prepareListeners();
     }
 
     /**
@@ -47,7 +51,7 @@ class MiddlewareService
     /**
      * Get names of the listeners from the system setting and load their classes.
      */
-    public function prepareListener()
+    public function prepareListeners()
     {
         $listeners = $this->modx->getOption('middlewares_listeners', null, '');
         if (!empty($listeners)) $this->process(explode_trim(',', $listeners), false);
@@ -137,6 +141,8 @@ class MiddlewareService
      */
     protected function loadClass($name, $isMiddleware)
     {
+        $type = $isMiddleware ? 'middlewares' : 'listeners';
+        if (isset($this->bootedClasses[$type][$name])) return $this->bootedClasses[$type][$name];
         $path = $isMiddleware ? $this->path : $this->lpath;
         $file = $path . $name . '.php';
         if (file_exists($file)) {
@@ -148,7 +154,7 @@ class MiddlewareService
             $this->modx->log(modX::LOG_LEVEL_ERROR, '[Middlewares] File ' . $file . ' does not exist!');
             return null;
         }
-
+        $this->bootedClasses[$type][$name] = $class;
         return $class;
     }
 

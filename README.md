@@ -36,9 +36,9 @@ class GlobalMiddleware extends Middlewares\Middleware
 // If the class name and file name do not match, then you need to return the class name.
 return 'GlobalMiddleware';
 ```
-The next step we need to specify the file name in the "middlewares_global_middlewares" system setting. That's all.
+In the next step we need to specify the file name without extension ("global") in the "middlewares_global_middlewares" system setting. That's all.
  
-In the "contexts" property you can specify contexts in which the middleware will be work.
+The "contexts" property is intended to specify contexts in which the middleware will be work.
 ```$php
 // By default the web context is set.
 public $contexts = array('web');
@@ -88,7 +88,7 @@ class ListenerManager extends Middlewares\Listener
 // In this case they are the same. So no need to return it.
 // return 'ListenerManager';
 ```
-In the manager point the file name in the "middlewares_listeners" system setting. Or you can do it in the global middleware:
+Put the file name in the "middlewares_listeners" system setting. Or you can do it in the global middleware:
 ```$php
 // global.php
 
@@ -102,7 +102,7 @@ class GlobalMiddleware extends Middlewares\Middleware
 
 return 'GlobalMiddleware';
 ```
-if you want your listeners to run before any MODX plugins, specify the argument "prepend" of the corresponding method:
+if you want to run your listeners before any MODX plugins, specify the argument "before" of the corresponding method:
 ```$php
 public function OnHandleRequest($before=true) 
 {
@@ -119,7 +119,7 @@ public function OnBeforeDocFormSave($properties, $before=true)
     }
 }
 ```
-In most cases you can refuse to use the usual MODX plugins.
+In most cases you can refuse to use usual MODX plugins.
 
 #### Example files 
 You can find a middleware file in the *core/middlewares* directory and a listener file in the *core/listeners* directory. The middleware is ready for use right after installation.
