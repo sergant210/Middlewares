@@ -88,7 +88,7 @@ class ListenerManager extends Middlewares\Listener
 // In this case they are the same. So no need to return it.
 // return 'ListenerManager';
 ```
-In the manager point the file name in the "middlewares_listeners" system setting. Or you can do it in the global middleware:
+Put the file name in the "middlewares_listeners" system setting. Or you can do it in the global middleware:
 ```$php
 // global.php
 
@@ -102,7 +102,7 @@ class GlobalMiddleware extends Middlewares\Middleware
 
 return 'GlobalMiddleware';
 ```
-if you want your listeners to run before any MODX plugins, specify the argument "prepend" of the corresponding method:
+if you want to run your listeners before any MODX plugins, specify the argument "prepend" of the corresponding method:
 ```$php
 public function OnHandleRequest($before=true) 
 {
