@@ -10,9 +10,10 @@ $tmp = array(
         'description' => '',
         'events' => array(
             'OnMODXInit' => array('priority' => -90),
-            'OnLoadWebDocument' => array('priority' => -10),
+            'OnLoadWebDocument' => array('priority' => -90),
             'OnWebPagePrerender' => array('priority' => 10),
             'OnWebPageComplete' => array('priority' => 10),
+            'OnManagerPageAfterRender' => array('priority' => 10),
         )
     )
 );

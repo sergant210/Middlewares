@@ -118,6 +118,10 @@ class MiddlewareService
             case 'OnLoadWebDocument':
                 $middlewares = $this->resourceMiddlewares;
                 break;
+        	case 'OnManagerPageAfterRender':
+                $method = 'beforeResponse';
+                $middlewares = $this->globalMiddlewares;
+        		break;
         	case 'OnWebPagePrerender':
                 $method = 'beforeResponse';
                 $middlewares = array_merge($this->resourceMiddlewares, $this->globalMiddlewares);
@@ -203,16 +207,23 @@ class MiddlewareService
         $methods = $classReflection->getMethods();
         foreach ($methods as $method) {
             if ($method->isConstructor()) continue;
-            $before = false;
+            //$before = $last = false;
             $methodReflection = new ReflectionMethod($class, $method->name);
             foreach ($methodReflection->getParameters() as $param) {
                 if ($param->name == 'before') {
                     $before = (bool) $param->getDefaultValue();
+                    break;
+                }
+                if ($param->name == 'last') {
+                    $last = (bool) $param->getDefaultValue();
+                    break;
                 }
             }
             $this->eventMap[$method->name][] = $listener;
-            if ($before) {
+            if (isset($before)) {
                 $this->modx->eventMap[$method->name] = array($this->pluginId => $this->pluginId) + ($this->modx->eventMap[$method->name] ?: array());
+            } elseif (isset($last)) {
+                $this->modx->eventMap[$method->name] = ($this->modx->eventMap[$method->name] ?: array()) + array($this->pluginId => $this->pluginId);
             } else {
                 $this->modx->eventMap[$method->name][$this->pluginId] = $this->pluginId;
             }

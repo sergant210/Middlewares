@@ -102,7 +102,7 @@ class GlobalMiddleware extends Middlewares\Middleware
 
 return 'GlobalMiddleware';
 ```
-if you want to run your listeners before any MODX plugins, specify the argument "before" of the corresponding method:
+if you want to run your listeners before any MODX plugins, specify the argument "before" of the corresponding method. Similarly use the "last" argument to run your listener after plugins:
 ```$php
 public function OnHandleRequest($before=true) 
 {
@@ -110,7 +110,7 @@ public function OnHandleRequest($before=true)
     $this->modx->regClientScript('<script>alert("OnHandleRequest");</script>');
 }
     
-public function OnBeforeDocFormSave($properties, $before=true) 
+public function OnBeforeDocFormSave($properties, $after=true) 
 {
     extract($properties);
     if (empty($resource->longtitle)) {

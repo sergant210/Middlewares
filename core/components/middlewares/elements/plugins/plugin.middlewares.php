@@ -14,6 +14,7 @@ switch ($modx->event->name) {
         break;
     case 'OnWebPagePrerender':
     case 'OnWebPageComplete':
+    case 'OnManagerPageAfterRender':
         app('MiddlewareService')->run($modx->event->name);
         break;
 }

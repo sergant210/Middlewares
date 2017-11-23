@@ -22,7 +22,7 @@ abstract class Middleware
      */
     public function onRequest(){}
     /**
-     * Called on the "OnWebPagePrerender" event.
+     * Called on the "OnWebPagePrerender" and "OnManagerPageAfterRender" events.
      */
     public function beforeResponse(){}
     /**
