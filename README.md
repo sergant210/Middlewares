@@ -102,7 +102,7 @@ class GlobalMiddleware extends Middlewares\Middleware
 
 return 'GlobalMiddleware';
 ```
-if you want to run your listeners before any MODX plugins, specify the argument "before" of the corresponding method. Similarly use the "after" argument to run your listener after plugins:
+if you want to run your listeners before any MODX plugins, specify the argument "before" of the corresponding method:
 ```$php
 public function OnHandleRequest($before=true) 
 {
