@@ -207,22 +207,22 @@ class MiddlewareService
         $methods = $classReflection->getMethods();
         foreach ($methods as $method) {
             if ($method->isConstructor()) continue;
-            //$before = $last = false;
+            //$before = $after = false;
             $methodReflection = new ReflectionMethod($class, $method->name);
             foreach ($methodReflection->getParameters() as $param) {
                 if ($param->name == 'before') {
                     $before = (bool) $param->getDefaultValue();
                     break;
                 }
-                if ($param->name == 'last') {
-                    $last = (bool) $param->getDefaultValue();
+                if ($param->name == 'after') {
+                    $after = (bool) $param->getDefaultValue();
                     break;
                 }
             }
             $this->eventMap[$method->name][] = $listener;
             if (isset($before)) {
                 $this->modx->eventMap[$method->name] = array($this->pluginId => $this->pluginId) + ($this->modx->eventMap[$method->name] ?: array());
-            } elseif (isset($last)) {
+            } elseif (isset($after)) {
                 $this->modx->eventMap[$method->name] = ($this->modx->eventMap[$method->name] ?: array()) + array($this->pluginId => $this->pluginId);
             } else {
                 $this->modx->eventMap[$method->name][$this->pluginId] = $this->pluginId;

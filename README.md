@@ -102,7 +102,7 @@ class GlobalMiddleware extends Middlewares\Middleware
 
 return 'GlobalMiddleware';
 ```
-if you want to run your listeners before any MODX plugins, specify the argument "before" of the corresponding method. Similarly use the "last" argument to run your listener after plugins:
+if you want to run your listeners before any MODX plugins, specify the argument "before" of the corresponding method. Similarly use the "after" argument to run your listener after plugins:
 ```$php
 public function OnHandleRequest($before=true) 
 {
@@ -119,7 +119,7 @@ public function OnBeforeDocFormSave($properties, $after=true)
     }
 }
 ```
-In most cases you can refuse to use usual MODX plugins.
+So in most cases you can refuse to use usual MODX plugins.
 
 #### Example files 
 You can find a middleware file in the *core/middlewares* directory and a listener file in the *core/listeners* directory. The middleware is ready for use right after installation.
