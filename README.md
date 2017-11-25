@@ -110,7 +110,7 @@ public function OnHandleRequest($before=true)
     $this->modx->regClientScript('<script>alert("OnHandleRequest");</script>');
 }
     
-public function OnBeforeDocFormSave($properties, $after=true) 
+public function OnBeforeDocFormSave($properties, $before=true) 
 {
     extract($properties);
     if (empty($resource->longtitle)) {
