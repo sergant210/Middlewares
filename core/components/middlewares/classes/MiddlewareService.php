@@ -59,13 +59,19 @@ class MiddlewareService
 
     /**
      * Get names of the middlewares from the resource TV and load their classes.
+     * @param string|array $middlewares
      */
-    public function prepareResourceMiddlewares()
+    public function prepareResourceMiddlewares($middlewares = '')
     {
-        $resource = $this->modx->resource;
-        if ($resource && $resource instanceof modResource) {
-            $middlewares = $resource->getTVValue('middlewares');
-            if (!empty($middlewares)) $this->process(explode_trim(',', $middlewares), true);
+        if ($middlewares) {
+            if (!is_array($middlewares)) $middlewares = explode_trim(',', $middlewares);
+            $this->process($middlewares, true);
+        } else {
+            $resource = $this->modx->resource;
+            if ($resource && $resource instanceof modResource) {
+                $middlewares = $resource->getTVValue('middlewares');
+                if (!empty($middlewares)) $this->process(explode_trim(',', $middlewares), true);
+            }
         }
     }
 
@@ -207,23 +213,17 @@ class MiddlewareService
         $methods = $classReflection->getMethods();
         foreach ($methods as $method) {
             if ($method->isConstructor()) continue;
-            //$before = $after = false;
+            $before = false;
             $methodReflection = new ReflectionMethod($class, $method->name);
             foreach ($methodReflection->getParameters() as $param) {
                 if ($param->name == 'before') {
                     $before = (bool) $param->getDefaultValue();
                     break;
                 }
-                if ($param->name == 'after') {
-                    $after = (bool) $param->getDefaultValue();
-                    break;
-                }
             }
             $this->eventMap[$method->name][] = $listener;
-            if (isset($before)) {
+            if ($before) {
                 $this->modx->eventMap[$method->name] = array($this->pluginId => $this->pluginId) + ($this->modx->eventMap[$method->name] ?: array());
-            } elseif (isset($after)) {
-                $this->modx->eventMap[$method->name] = ($this->modx->eventMap[$method->name] ?: array()) + array($this->pluginId => $this->pluginId);
             } else {
                 $this->modx->eventMap[$method->name][$this->pluginId] = $this->pluginId;
             }

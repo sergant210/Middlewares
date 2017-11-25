@@ -11,8 +11,8 @@ switch ($options[xPDOTransport::PACKAGE_ACTION]) {
     case xPDOTransport::ACTION_INSTALL:
         // Make an example of the middleware
         $middleware = array(
-            'source' => MODX_CORE_PATH . 'components/middlewares/examples/global_middleware.php',
-            'file' => MODX_CORE_PATH . 'middlewares/global.php',
+            'source' => MODX_CORE_PATH . 'components/middlewares/examples/init_middleware.php',
+            'file' => MODX_CORE_PATH . 'middlewares/init.php',
         );
         if (!file_exists(MODX_CORE_PATH . 'middlewares')) {
             mkdir(MODX_CORE_PATH . 'middlewares', 0755);
