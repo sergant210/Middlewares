@@ -18,7 +18,7 @@ switch ($options[xPDOTransport::PACKAGE_ACTION]) {
             mkdir(MODX_CORE_PATH . 'middlewares', 0755);
         }
         if (!file_exists($middleware['file'])) {
-            copy($middleware['source'], $middleware['file']);
+            @copy($middleware['source'], $middleware['file']);
         }
         // Make an example of the listener
         $listener = array(

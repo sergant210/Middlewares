@@ -7,7 +7,7 @@ Middlewares can be used to handle the request, and also allow you to perform cer
 ![https://modzone.ru/assets/images/documentation/middlewares_thumb.jpg](https://modzone.ru/assets/images/documentation/middlewares.jpg)
 
 Middlewares are based on classes. They can be global (fires on every request) or custom (fires only for specified resources). The global middlewares are specified in the "middlewares_global_middlewares" system setting. The custom ones must be set in a resource TV with name "middlewares".
-The middleware class have 3 methods:
+The middleware class has 3 methods:
 - onRequest - called on the OnMODXInit event.
 - beforeResponse - called on the OnWebPagePrerender event.
 - afterResponse - called on the OnWebPageComplete event.
@@ -66,7 +66,7 @@ class ListenerManager extends Middlewares\Listener
 	
     public function OnHandleRequest() 
     {
-        this->modx->log(1, '[ListenerManager] OnHandleRequest event is fired!';
+        $this->modx->log(1, '[ListenerManager] OnHandleRequest event is fired!';
         $this->modx->regClientScript('<script>alert("OnHandleRequest");</script>');
     }
     

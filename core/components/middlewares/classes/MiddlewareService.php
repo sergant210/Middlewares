@@ -164,6 +164,7 @@ class MiddlewareService
             $this->modx->log(modX::LOG_LEVEL_ERROR, '[Middlewares] File ' . $file . ' does not exist!');
             return null;
         }
+        if (!class_exists($class)) return null;
         $this->bootedClasses[$type][$name] = $class;
         return $class;
     }
@@ -208,24 +209,21 @@ class MiddlewareService
     public function addEventListener(Listener $listener)
     {
         if (!$this->checkContext($listener)) return;
-        $class = get_class($listener);
-        $classReflection = new ReflectionObject($listener);
-        $methods = $classReflection->getMethods();
-        foreach ($methods as $method) {
-            if ($method->isConstructor()) continue;
+        foreach (get_class_methods($listener) as $method) {
+            if ($method == '__construct') continue;
             $before = false;
-            $methodReflection = new ReflectionMethod($class, $method->name);
+            $methodReflection = new ReflectionMethod(get_class($listener), $method);
             foreach ($methodReflection->getParameters() as $param) {
                 if ($param->name == 'before') {
                     $before = (bool) $param->getDefaultValue();
                     break;
                 }
             }
-            $this->eventMap[$method->name][] = $listener;
+            $this->eventMap[$method][] = $listener;
             if ($before) {
-                $this->modx->eventMap[$method->name] = array($this->pluginId => $this->pluginId) + ($this->modx->eventMap[$method->name] ?: array());
+                $this->modx->eventMap[$method] = array($this->pluginId => $this->pluginId) + ($this->modx->eventMap[$method] ?: array());
             } else {
-                $this->modx->eventMap[$method->name][$this->pluginId] = $this->pluginId;
+                $this->modx->eventMap[$method][$this->pluginId] = $this->pluginId;
             }
 //            $this->modx->addEventListener($method->name, $this->pluginId);
         }
