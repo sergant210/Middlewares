@@ -3,13 +3,13 @@ namespace Middlewares;
 
 use modX;
 use modResource;
-use ReflectionObject;
+use ReflectionException;
 use ReflectionMethod;
 
 class MiddlewareService
 {
     protected $modx;
-    protected $path;
+    protected $mpath;
     protected $lpath;
     protected $globalMiddlewares = array();
     protected $resourceMiddlewares = array();
@@ -23,7 +23,7 @@ class MiddlewareService
     public function __construct(modX $modx, $path, $pluginId)
     {
         $this->modx = $modx;
-        $this->path = $modx->getOption('middlewares_path', null, MODX_CORE_PATH . 'middlewares/');
+        $this->mpath = $modx->getOption('middlewares_path', null, MODX_CORE_PATH . 'middlewares/');
         $this->lpath = $modx->getOption('middlewares_lpath', null, MODX_CORE_PATH . 'listeners/');
         $this->pluginId = $pluginId;
 
@@ -33,6 +33,7 @@ class MiddlewareService
 
     /**
      * Prepare global middlewares and listeners.
+     * @throws ReflectionException
      */
     public function init()
     {
@@ -42,35 +43,47 @@ class MiddlewareService
 
     /**
      * Get names of the middlewares from the system setting and load their classes.
+     * @throws ReflectionException
      */
     public function prepareGlobalMiddlewares()
     {
         $middlewares = $this->modx->getOption('middlewares_global_middlewares', null, '');
-        if (!empty($middlewares)) $this->process(explode_trim(',', $middlewares), true);
+        if (!empty($middlewares)) {
+            $this->process(explode_trim(',', $middlewares), true);
+        }
     }
+
     /**
      * Get names of the listeners from the system setting and load their classes.
+     * @throws ReflectionException
      */
     public function prepareListeners()
     {
         $listeners = $this->modx->getOption('middlewares_listeners', null, '');
-        if (!empty($listeners)) $this->process(explode_trim(',', $listeners), false);
+        if (!empty($listeners)) {
+            $this->process(explode_trim(',', $listeners), false);
+        }
     }
 
     /**
      * Get names of the middlewares from the resource TV and load their classes.
      * @param string|array $middlewares
+     * @throws ReflectionException
      */
     public function prepareResourceMiddlewares($middlewares = '')
     {
         if ($middlewares) {
-            if (!is_array($middlewares)) $middlewares = explode_trim(',', $middlewares);
+            if (!is_array($middlewares)) {
+                $middlewares = explode_trim(',', $middlewares);
+            }
             $this->process($middlewares, true);
         } else {
             $resource = $this->modx->resource;
             if ($resource && $resource instanceof modResource) {
                 $middlewares = $resource->getTVValue('middlewares');
-                if (!empty($middlewares)) $this->process(explode_trim(',', $middlewares), true);
+                if (!empty($middlewares)) {
+                    $this->process(explode_trim(',', $middlewares), true);
+                }
             }
         }
     }
@@ -81,7 +94,9 @@ class MiddlewareService
      */
     public function addMiddleware(Middleware $middleware)
     {
-        if (!$this->checkContext($middleware)) return null;
+        if (!$this->checkContext($middleware)) {
+            return null;
+        }
             if ($middleware->global) {
             $this->globalMiddlewares[] = $middleware;
         } else {
@@ -93,15 +108,20 @@ class MiddlewareService
     /**
      * @param array $elements
      * @param bool $isMiddleware
+     * @throws \ReflectionException
      */
     protected function process($elements, $isMiddleware)
     {
         foreach ($elements as $element) {
-            if ($class = $this->loadClass($element, $isMiddleware)) {
-                if ($isMiddleware) {
-                    $this->addMiddleware(new $class($this->modx, $this->modx->event->name == 'OnMODXInit'));
-                } else {
-                    $this->addEventListener(new $class($this->modx));
+            if (($class = $this->loadClass($element, $isMiddleware)) && class_exists($class)) {
+                try {
+                    if ($isMiddleware) {
+                        $this->addMiddleware(new $class($this->modx, $this->modx->event->name == 'OnMODXInit'));
+                    } else {
+                        $this->addEventListener(new $class($this->modx));
+                    }
+                } catch (\InvalidArgumentException $e) {
+                    log_error('[Middlewares] ' . $e->getMessage());
                 }
             }
         }
@@ -152,8 +172,10 @@ class MiddlewareService
     protected function loadClass($name, $isMiddleware)
     {
         $type = $isMiddleware ? 'middlewares' : 'listeners';
-        if (isset($this->bootedClasses[$type][$name])) return $this->bootedClasses[$type][$name];
-        $path = $isMiddleware ? $this->path : $this->lpath;
+        if (isset($this->bootedClasses[$type][$name])) {
+            return $this->bootedClasses[$type][$name];
+        }
+        $path = $isMiddleware ? $this->mpath : $this->lpath;
         $file = $path . $name . '.php';
         if (file_exists($file)) {
             $class = include_once $file;
@@ -164,7 +186,9 @@ class MiddlewareService
             $this->modx->log(modX::LOG_LEVEL_ERROR, '[Middlewares] File ' . $file . ' does not exist!');
             return null;
         }
-        if (!class_exists($class)) return null;
+        if (!class_exists($class)) {
+            return null;
+        }
         $this->bootedClasses[$type][$name] = $class;
         return $class;
     }
@@ -205,16 +229,21 @@ class MiddlewareService
 
     /**
      * @param Listener $listener
+     * @throws \ReflectionException
      */
     public function addEventListener(Listener $listener)
     {
-        if (!$this->checkContext($listener)) return;
+        if (!$this->checkContext($listener)) {
+            return;
+        }
         foreach (get_class_methods($listener) as $method) {
-            if ($method == '__construct') continue;
+            if ($method === '__construct') {
+                continue;
+            }
             $before = false;
             $methodReflection = new ReflectionMethod(get_class($listener), $method);
             foreach ($methodReflection->getParameters() as $param) {
-                if ($param->name == 'before') {
+                if ($param->name === 'before') {
                     $before = (bool) $param->getDefaultValue();
                     break;
                 }

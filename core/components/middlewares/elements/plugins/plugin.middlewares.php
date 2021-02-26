@@ -1,5 +1,8 @@
 <?php
-if (!function_exists('app')) return;
+
+if (!function_exists('app') || PHP_SAPI  === 'cli') {
+    return;
+}
 /** @var modX $modx */
 switch ($modx->event->name) {
     case 'OnMODXInit':

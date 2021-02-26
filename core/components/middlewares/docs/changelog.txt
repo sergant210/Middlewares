@@ -1,5 +1,9 @@
 Changelog for Middlewares.
 
+1.1.1-pl
+==============
+- Fixed possible fatal error when updating MODX in the cli mode.
+
 1.1.0-pl
 ==============
 - Added an ability to run listeners before usual MODX plugins.
